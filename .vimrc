@@ -85,7 +85,7 @@ set statusline=
 " %M modified flag
 " %Y type of file in buffer
 " %R read-only flag
-set statusline+=\ %F\ %M\ %Y\ %R
+set statusline+=\ %F\ %M\ %Y\ %R\ %{FileSize(line2byte('$')+len(getline('$')))}
 
 " divider between left and right sides
 set statusline+=%=
@@ -96,7 +96,14 @@ set statusline+=%=
 " %l line number
 " %c column number
 " %p%% cursor percentage from top
-set statusline+=\ row:\ %l\ col:\ %c\ percent:\ %p%%
+set statusline+=\ row:\ %l\ col:\ %c\ %p%%
+
+function! FileSize(bytes)
+  let l:bytes = a:bytes | let l:sizes = ['B', 'KB', 'MB', 'GB'] | let l:i = 0
+  while l:bytes >= 1024 | let l:bytes = l:bytes / 1024.0 | let l:i += 1 | endwhile
+  return l:bytes > 0 ? printf(' %.1f%s ', l:bytes, l:sizes[l:i]) : ''
+endfunction
+
 
 " show on second to last line
 set laststatus=2
@@ -104,11 +111,9 @@ set laststatus=2
 
 " Keymappings
 " normal mode: nnoremap
-" insert mode: inoremap
-" visual mode: vnormap
+" insert mode: inoremap " visual mode: vnormap
 
 inoremap jj <esc>
-
 " Pretty colors
 " colorscheme molokai
 colorscheme monokai
